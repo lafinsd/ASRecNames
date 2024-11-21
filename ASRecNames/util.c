@@ -30,8 +30,7 @@ method_t mstruct[] = {
 };
 
 int init(char which, const char *arg0, void (**pf8)(unsigned char *,uint32_t), uint32_t (**pf16)(unsigned char *, unsigned char *,uint32_t)) {
-
-    char *cmd  = calloc(300,1);
+    
     char *nres = (char *)calloc(30,1);
     char *name = "user.method";
     ssize_t retsz;
@@ -45,28 +44,30 @@ int init(char which, const char *arg0, void (**pf8)(unsigned char *,uint32_t), u
     idx = 2;
 #endif
     
-    for (i=0; i<sizeof(mstruct); ++i) {
+    for (i=0; i<(sizeof(mstruct)/sizeof(mstruct[0])); ++i) {
         if (which == mstruct[i].hint){
             idx = i;
             break;
         }
     }
     
-    if (idx < 0){
+    if (idx < 0) {
         return 1;
     }
     
     retsz = getxattr(arg0, name, (void *)nres, 30, 0, 0);
     
     if ((retsz < 1) || (strcmp(mstruct[idx].method, nres) != 0)) {
+        char *cmd  = calloc(300,1);
+        
         sprintf(cmd, "xattr -w user.method %s %s", mstruct[idx].method, arg0);
         system(cmd);
+        free (cmd);
     }
     
     *pf8  = mstruct[idx].f8;
     *pf16 = mstruct[idx].f16;
     
-    free (cmd);
     free (nres);
     
     return 0;

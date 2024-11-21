@@ -8,7 +8,7 @@
 #ifndef util_h
 #define util_h
 
-#define THREAD
+#define INLINE
 #define MY_DEBUG
 
 int      init(char, const char *, void (**)(unsigned char *, uint32_t), uint32_t (**)(unsigned char *, unsigned char *, uint32_t));
