@@ -66,7 +66,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "p"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "f"
@@ -82,7 +82,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/Shared/MyRoot/Applescript/data/Records/Master/mrecordsList.as"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

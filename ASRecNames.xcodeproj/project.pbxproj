@@ -12,6 +12,7 @@
 		8396EDEB2C56D3330011D8F0 /* c4inline.c in Sources */ = {isa = PBXBuildFile; fileRef = 8396EDEA2C56D3330011D8F0 /* c4inline.c */; };
 		8396EDEE2C56D3750011D8F0 /* c4thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 8396EDED2C56D3750011D8F0 /* c4thread.c */; };
 		8396EDF12C56D3CC0011D8F0 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 8396EDF02C56D3CC0011D8F0 /* util.c */; };
+		83D153582CEFA0D40031E7BD /* gopt.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D153572CEFA0D40031E7BD /* gopt.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +38,8 @@
 		8396EDED2C56D3750011D8F0 /* c4thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = c4thread.c; sourceTree = "<group>"; };
 		8396EDEF2C56D3CC0011D8F0 /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		8396EDF02C56D3CC0011D8F0 /* util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
+		83D153562CEFA0D40031E7BD /* gopt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gopt.h; sourceTree = "<group>"; };
+		83D153572CEFA0D40031E7BD /* gopt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gopt.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +73,8 @@
 			isa = PBXGroup;
 			children = (
 				8396EDDF2C56D16F0011D8F0 /* main.c */,
+				83D153562CEFA0D40031E7BD /* gopt.h */,
+				83D153572CEFA0D40031E7BD /* gopt.c */,
 				8396EDE62C56D2C60011D8F0 /* c4fork.h */,
 				8396EDE72C56D2C60011D8F0 /* c4fork.c */,
 				8396EDE92C56D3330011D8F0 /* c4inline.h */,
@@ -140,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8396EDF12C56D3CC0011D8F0 /* util.c in Sources */,
+				83D153582CEFA0D40031E7BD /* gopt.c in Sources */,
 				8396EDEB2C56D3330011D8F0 /* c4inline.c in Sources */,
 				8396EDE82C56D2C60011D8F0 /* c4fork.c in Sources */,
 				8396EDEE2C56D3750011D8F0 /* c4thread.c in Sources */,
