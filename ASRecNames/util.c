@@ -11,25 +11,26 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "util.h"
 #include "c4thread.h"
 #include "c4fork.h"
 #include "c4inline.h"
+#include "gopt.h"
+#include "util.h"
 
 typedef struct {
-    char hint;
-    char *method;
-    void (*f8)(unsigned char *,uint32_t);
+    E_MODEL  hint;
+    char     *method;
+    void     (*f8)(unsigned char *,uint32_t);
     uint32_t (*f16)(unsigned char *,unsigned char *,uint32_t);
 } method_t;
 
 method_t mstruct[] = {
-    {'t', "THREAD", tconv2UTF8MAC, tconv2UTF16},
-    {'k', "FORK", fconv2UTF8MAC, fconv2UTF16},
-    {'i', "INLINE", iconv2UTF8MAC, iconv2UTF16}
+    {M_THREAD, "THREAD", tconv2UTF8MAC, tconv2UTF16},
+    {M_FORK, "FORK", fconv2UTF8MAC, fconv2UTF16},
+    {M_INLINE, "INLINE", iconv2UTF8MAC, iconv2UTF16}
 };
 
-int init(char which, const char *arg0, void (**pf8)(unsigned char *,uint32_t), uint32_t (**pf16)(unsigned char *, unsigned char *,uint32_t)) {
+int init(E_MODEL which, char *arg0, void (**pf8)(unsigned char *,uint32_t), uint32_t (**pf16)(unsigned char *, unsigned char *,uint32_t)) {
     
     char *nres = (char *)calloc(30,1);
     char *name = "user.method";
@@ -44,6 +45,7 @@ int init(char which, const char *arg0, void (**pf8)(unsigned char *,uint32_t), u
     idx = 2;
 #endif
     
+    // Reset the threading model if an option was supplied to override the default.
     for (i=0; i<(sizeof(mstruct)/sizeof(mstruct[0])); ++i) {
         if (which == mstruct[i].hint){
             idx = i;
@@ -51,12 +53,17 @@ int init(char which, const char *arg0, void (**pf8)(unsigned char *,uint32_t), u
         }
     }
     
+    // Done if no override provided.
     if (idx < 0) {
         return 1;
     }
     
+    // Override provided. Get the method attribute from the file.
     retsz = getxattr(arg0, name, (void *)nres, 30, 0, 0);
     
+    /* If there was no method attribute or there was but it doesn't match
+     * the the chosen one rewrite the attribute.
+     */
     if ((retsz < 1) || (strcmp(mstruct[idx].method, nres) != 0)) {
         char *cmd  = calloc(300,1);
         
@@ -65,6 +72,7 @@ int init(char which, const char *arg0, void (**pf8)(unsigned char *,uint32_t), u
         free (cmd);
     }
     
+    // Set the support function routine pointers.
     *pf8  = mstruct[idx].f8;
     *pf16 = mstruct[idx].f16;
     

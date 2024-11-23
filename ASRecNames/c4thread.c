@@ -16,6 +16,7 @@
 #define _REENTRANT
 #include <pthread.h>
 #include "c4thread.h"
+#include "gopt.h"
 #include "util.h"
 
 static void *conv2UTF16t (void *);

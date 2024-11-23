@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <unistd.h>
+#include "gopt.h"
 #include "util.h"
 
 void fconv2UTF8MAC(unsigned char *name, uint32_t len) {
