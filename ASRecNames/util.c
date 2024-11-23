@@ -10,7 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <libgen.h>    // for basename()
+
 #include "c4thread.h"
 #include "c4fork.h"
 #include "c4inline.h"
@@ -44,6 +45,10 @@ int init(E_MODEL which, char *arg0, void (**pf8)(unsigned char *,uint32_t), uint
 #elif defined INLINE
     idx = 2;
 #endif
+    
+    if (idx < 0) {
+        printf("WARNING: %s built without default threading model\n\n", basename(arg0));
+    }
     
     // Reset the threading model if an option was supplied to override the default.
     for (i=0; i<(sizeof(mstruct)/sizeof(mstruct[0])); ++i) {
