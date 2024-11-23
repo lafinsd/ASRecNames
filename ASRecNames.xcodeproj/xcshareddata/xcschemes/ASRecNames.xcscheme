@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1540"
+   LastUpgradeVersion = "1610"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -53,23 +53,27 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "t"
+            argument = "-t"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "i"
+            argument = "-t"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "k"
+            argument = "-i"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "p"
-            isEnabled = "NO">
+            argument = "-k"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "f"
+            argument = "-p"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-f"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
@@ -82,7 +86,11 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/Shared/MyRoot/Applescript/data/Records/Master/mrecordsList.as"
-            isEnabled = "NO">
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/tmp/fooBarBar"
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

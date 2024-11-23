@@ -9,6 +9,7 @@
 #include <wchar.h>
 #include <unistd.h>
 #include <stdio.h>
+#include "gopt.h"
 #include "util.h"
 
 void iconv2UTF8MAC(unsigned char *name, uint32_t len) {

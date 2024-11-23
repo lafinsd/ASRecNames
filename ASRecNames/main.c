@@ -16,6 +16,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <wchar.h>
+#include "gopt.h"
 #include "util.h"
 
 static int procRec(void);
@@ -40,68 +41,49 @@ static uint32_t gOPtr = 0;
 static char gLP = ' ';
 
 
-int main(int argc, const char * argv[]) {
+int main(int argc, char *argv[]) {
     FILE *fp, *fpout;
     off_t fsize;
-    int res, os = 0;
-    unsigned char *allocOBuf, whichVersion = ' ';
+    int res;
+    unsigned char *allocOBuf;//, whichVersion = ' ';
+    GOPT opts = {0};
     
-    if (argc > 1) {
-        whichVersion = *argv[1];
-        if ((whichVersion == 't') || (whichVersion == 'k') || (whichVersion == 'i')) {
-            os++;
-            argc--;
+    opts.argc = argc;
+    opts.argv = argv;
+    
+    if (procopt(&opts)) {
+        exit (1);
+    }
+    
+    if ((res=init(opts.model, argv[0], &pfunc2UTF8MAC, &pfunc2UTF16)) != 0) {
+        printf("init() failed: no threading model defined (%d)\n", res);
+        return res;
+    }
+    
+    {
+        char *cp;
+        
+        if ((fp = fopen((cp=argv[opts.optind]), "rb")) == NULL) {
+            printf("\n**ERROR: file %s does not exist\n", cp);
+            return 1;
+        }
+        fsize = myfsize(cp);
+        
+        if (fsize == 0) {
+            printf("\n**ERROR: file %s: bad file size\n", cp);
+            return 1;
         }
     }
     
-    if ((res=init(whichVersion, argv[0], &pfunc2UTF8MAC, &pfunc2UTF16)) != 0) {
-        printf("init() failed: error code %d\n", res);
-        return res;
-    }
-
-    if ((argc < 3) || (argc > 4)) {
-        printf("\nERROR: bad arg count %d\n", argc - 1);
-        return 1;
-    }
-    
-    whichVersion = *argv[1+os];
-    
-    if (whichVersion != 'f' && whichVersion != 'p') {
-        printf("\nERROR: bad arg %c\n", whichVersion);
-        return 1;
-    }
-    
-    if (whichVersion == 'p' && argc != 3) {
-        printf("\nERROR: bad arg count\n");
-        return 1;
-    }
-    
-    if (whichVersion == 'f' && argc != 4) {
-        printf("\nERROR: bad arg count\n");
-        return 1;
-    }
-    
-    fp = fopen(argv[2+os], "rb");
-    if (fp == NULL) {
-        printf("\n**ERROR: file %s does not exist\n", argv[2+os]);
-        return 1;
-    }
-    fsize = myfsize(argv[2+os]);
-    
-    if (fsize == 0) {
-        printf("\n**ERROR: file %s: bad file size\n", argv[2+os]);
-        return 1;
-    }
-    
-    gAllocIbuf  = gIbuf  = (unsigned char *)malloc((unsigned long)fsize);
+    gAllocIbuf = gIbuf = (unsigned char *)malloc((unsigned long)fsize);
     
     fread(gIbuf,fsize,1,fp);
     fclose (fp);
     
-    if (whichVersion == 'f') {
-        fpout = fopen(argv[3+os], "wb");
+    if (opts.out_type == O_FILE) {
+        fpout = fopen(argv[opts.optind+1], "wb");
         if (fpout == NULL) {
-            printf("\n**ERROR: file %s cannot be opened\n", argv[3+os]);
+            printf("\n**ERROR: file %s cannot be opened\n", argv[opts.optind+1]);
             return 1;
         }
         // Output file won't be bigger than input file
