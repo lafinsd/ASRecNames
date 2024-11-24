@@ -16,6 +16,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <wchar.h>
+#include <libgen.h>    // for basename()
 #include "gopt.h"
 #include "util.h"
 
@@ -34,6 +35,9 @@ static void pRB(void);
 static void (*pfunc2UTF8MAC)(unsigned char *, uint32_t);
 static uint32_t (*pfunc2UTF16)(unsigned char *, unsigned char *, uint32_t);
 
+static char *getRunTime (void);
+static void printBanner(char *);
+
 static unsigned char *gIbuf;
 static unsigned char *gObuf;
 static unsigned char *gAllocIbuf;
@@ -45,11 +49,13 @@ int main(int argc, char *argv[]) {
     FILE *fp, *fpout;
     off_t fsize;
     int res;
-    unsigned char *allocOBuf;//, whichVersion = ' ';
+    unsigned char *allocOBuf;
     GOPT opts = {0};
     
     opts.argc = argc;
     opts.argv = argv;
+    
+    printBanner(argv[0]);
     
     if (procopt(&opts)) {
         exit (1);
@@ -419,11 +425,9 @@ static int procRecList(void) {
     if ((numpairs & 1) == 1) {
         printf("Odd numpairs\n");
     }
-    numpairs = numpairs/2;
-#else
-    numpairs = numpairs/2; // this is the number of list items: list is a list of keys of each pair
 #endif
-    
+    numpairs = numpairs/2; // this is the number of list items: list is a list of keys of each pair
+
     gIbuf += 4;
     
     incBE(lcntptr, numpairs);
@@ -494,4 +498,44 @@ static void pname (unsigned char *name, uint32_t len) {
     
     gLP = 'n';
     return;
+}
+
+static void printBanner(char *myName) {
+#define __MONTH__ (\
+    __DATE__[2] == 'n' ? (__DATE__[1] == 'a' ? "1" : "6") \
+    : __DATE__[2] == 'b' ? "2" \
+    : __DATE__[2] == 'r' ? (__DATE__[0] == 'M' ? "3" : "4") \
+    : __DATE__[2] == 'y' ? "5" \
+    : __DATE__[2] == 'l' ? "7" \
+    : __DATE__[2] == 'g' ? "8" \
+    : __DATE__[2] == 'p' ? "9" \
+    : __DATE__[2] == 't' ? "10" \
+    : __DATE__[2] == 'v' ? "11" \
+    : "12")
+    int   idx;
+    char  dts[50], banner[BUFSIZE];
+    char *rt, *d = malloc(sizeof(__DATE__));
+    
+    rt = getRunTime();
+    
+    strcpy(d,__DATE__);
+    d[6] = '\0';
+    idx  = (d[4] != ' ') ? 4 : 5;
+    
+    sprintf(dts, "%s-%s-%sT%s",&d[7], __MONTH__, &d[idx], __TIME__);
+    sprintf(banner, "%s(%s) (%s  %s)", basename(myName), RTYPE, dts, rt);
+    printf("%s\n", banner);
+    free(d);
+    free(rt);
+    return;
+}
+
+static char *getRunTime (void) {
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    char *rt = malloc(BUFSIZE);
+    
+    sprintf(rt, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    
+    return rt;
 }

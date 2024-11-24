@@ -60,7 +60,8 @@ int procopt(GOPT *p) {
         }
     }
     
-    if (optind == ((p->argc)-1)) {
+    // Make sure output file name provided if not running in print mode.
+    if ((optind == ((p->argc)-1)) && (p->out_type != O_PRINT)) {
         printf("No output file specified.\n");
         return (1);
     }
